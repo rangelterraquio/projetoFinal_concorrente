@@ -9,7 +9,7 @@ public class View {
         return input;
     }
 
-    public static  Integer showInputNumber(String titile, String msg ){
+    public static  Integer showInputNumber(String titile, String msg ) throws NumberFormatException{
         String input = JOptionPane.showInputDialog(null,msg,titile,JOptionPane.INFORMATION_MESSAGE);
         return  Integer.parseInt(input);
     }

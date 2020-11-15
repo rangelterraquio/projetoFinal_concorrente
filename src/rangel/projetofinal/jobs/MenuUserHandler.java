@@ -83,14 +83,14 @@ public class MenuUserHandler extends Thread {
 			
 			//Ask to the client his userName
 			getOut().writeObject(msg);
-			
-			
+			getOut().reset();
 			
 			Message clientInput = (Message) getIn().readObject();
 			
 			if(!isNameValid(clientInput.getMsg())) {
 				msg.setMsg(ServerSupplies.INVALIDNAME);
 				getOut().writeObject(msg);
+				getOut().reset();
 				return;
 			}else {
 				User user = new User(clientInput.getMsg());
@@ -111,16 +111,16 @@ public class MenuUserHandler extends Thread {
 					case ADD: {
 						if(clientInput.getProduct() != null) {
 							getUser().addProduct(clientInput.getProduct());
-							getOut().writeObject(new Message(Option.SERVER_INPUT, "Product added sucessefull!!!"));
+							getOut().writeObject(new Message(Option.SERVER_INPUT, "PRODUCT ADDED SUCESSEFULLY!!!"));
 						}else {
-							getOut().writeObject(new Message(Option.SERVER_INPUT, "Product invalid!!!"));
+							getOut().writeObject(new Message(Option.SERVER_INPUT, "PRODUCT INVALID!!!"));
 						}
 					}
 					case REMOVE: {
 						if(getUser().removeProduct(clientInput.getMsg())) {
-							getOut().writeObject(new Message(Option.SERVER_INPUT, "Product removed sucessefull!!!"));
+							getOut().writeObject(new Message(Option.SERVER_INPUT, "PRODUCT REMOVED SUCESSEFULLY!!"));
 						}else {
-							getOut().writeObject(new Message(Option.SERVER_INPUT, "Code invalid!!!"));
+							getOut().writeObject(new Message(Option.SERVER_INPUT, "OPSSS! THE ID WAS NOT FOUND!!"));
 						}
 					}
 					case LIST: {
@@ -134,7 +134,7 @@ public class MenuUserHandler extends Thread {
 						if(!productsMsg.isBlank()) {
 							getOut().writeObject(new Message(Option.SERVER_INPUT, productsMsg));
 						}else {
-							getOut().writeObject(new Message(Option.SERVER_INPUT, "There is not any product!!"));
+							getOut().writeObject(new Message(Option.SERVER_INPUT, "THERE IS NOT ANY PRODUCT!!!"));
 						}
 						
 						
