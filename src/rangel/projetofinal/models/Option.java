@@ -1,5 +1,12 @@
 package rangel.projetofinal.models;
 
+
+
+/**
+ * @author Rangel Cardoso Dias;
+ * @matricula UC18200693;
+ * @implNote Enum that represents the options o supplies menu;
+ */
 public enum Option {
 
 	

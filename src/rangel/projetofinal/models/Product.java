@@ -1,12 +1,14 @@
 package rangel.projetofinal.models;
 
-
+import java.io.Serializable;
 
 /**
  * @author Rangel Cardoso Dias;
- * @implNote classe than represents a Product;
+ * @matricula UC18200693;
+ * @implNote Model that represents a Product;
  */
-public class Product {
+@SuppressWarnings("serial")
+public class Product implements Serializable{
 	
 	
 	/** PROPERTIES */

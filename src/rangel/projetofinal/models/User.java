@@ -1,15 +1,17 @@
 package rangel.projetofinal.models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
 
 
-
 /**
  * @author Rangel Cardoso Dias;
- * @implNote classe than represents an User;
+ * @matricula UC18200693;
+ * @implNote Model that represents an User;
  */
-public class User {
+@SuppressWarnings("serial")
+public class User implements Serializable{
 
 	/** PROPERTIES */
 
@@ -24,7 +26,7 @@ public class User {
 		setName(name);
 		identifier = new UUID(3,3);
 		
-		
+		products = new ArrayList<Product>();
 		
 	}
 

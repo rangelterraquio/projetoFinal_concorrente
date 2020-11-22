@@ -7,133 +7,147 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 
-import rangel.projetofinal.models.Message;
+import rangel.projetofinal.models.SuppliesMenuMessage;
 import rangel.projetofinal.models.Option;
 import rangel.projetofinal.models.Product;
 import rangel.projetofinal.views.View;
+/**
+ * @author Rangel Cardoso Dias
+ * @matricula UC18200693
+ * 
+ * @implNote Class responsable for Client's supplies Menu;
+ */
+public class SuppliesClient {
 
-public class Client {
+	/** PROPERTIES */
 
 	private ObjectInputStream in;
 	private ObjectOutputStream out;
+	private String currentUserName;
 	
 	
+	/** GETTERS AND SETTERS */
+
 	public ObjectInputStream getIn() {
 		return in;
 	}
-
-
 
 	public void setIn(ObjectInputStream in) {
 		this.in = in;
 	}
 
-
-
 	public ObjectOutputStream getOut() {
 		return out;
 	}
-
-
 
 	public void setOut(ObjectOutputStream out) {
 		this.out = out;
 	}
 
 
-
 	public static void main(String[] args) throws UnknownHostException, IOException {
 
-		Client client = new Client();
+		SuppliesClient client = new SuppliesClient();
 		client.connect();
 		
 	}
 	
 	
 	
+	/**
+	 * Method to connect to the server
+	 * @throws UnknownHostException
+	 * @throws IOException
+	 */
 	private void connect() throws UnknownHostException, IOException {
 		
 		
-		
-		Socket socket = new Socket("localhost", ServerSupplies.PORT);
+		Socket socket = new Socket("localhost", SuppliesServer.PORT);
 		
 		setOut(new ObjectOutputStream(socket.getOutputStream()));
 		setIn(new ObjectInputStream(socket.getInputStream()));
 		
 		while(true) {
 			
-			Message serverInput;
+			SuppliesMenuMessage serverInput;
 			try {
-				serverInput = (Message) getIn().readObject();
+				serverInput = (SuppliesMenuMessage) getIn().readObject();
 				
-				Boolean isNewUser = serverInput.getMsg().contentEquals(ServerSupplies.NAMEREQUIRED);
-				Boolean isNameInvalid = serverInput.getMsg().contentEquals(ServerSupplies.INVALIDNAME);
-				Boolean isUserAccepted = serverInput.getMsg().contentEquals(ServerSupplies.NAMEACCEPTED);
+				Boolean isNewUser = serverInput.getMsg().contentEquals(SuppliesServer.NAMEREQUIRED);
+				Boolean isNameInvalid = serverInput.getMsg().contentEquals(SuppliesServer.INVALIDNAME);
+				Boolean isUserAccepted = serverInput.getMsg().contentEquals(SuppliesServer.NAMEACCEPTED);
 				
 				if(isNewUser) {
 					String userName = View.showInputText("User Name Required", "What is your name?");
-							
-					getOut().writeObject(new Message(Option.NONE, userName));
+					currentUserName = userName;
+					getOut().writeObject(new SuppliesMenuMessage(Option.NONE, userName));
 					getOut().reset();
 				}else if (isNameInvalid) {
 					View.showErrorMSG("Name Invalid", "Name invalid or already exist on database, try other one!");
 					String userName = View.showInputText("User Name Required", "What is your name?");
-					getOut().writeObject(new Message(Option.NONE, userName));
+					currentUserName = userName;
+					getOut().writeObject(new SuppliesMenuMessage(Option.NONE, userName));
 					getOut().reset();
 					
 				}else if (isUserAccepted) {
 					
-					Integer option = getUserOption();
-				
-					switch (option) {
-					case 0: {
-//							 Option.EXIT;
-						socket.close();
-					}
-					case 1: {
-						/** ADD OPTION*/
-						Product p = createProduct();
-						Message msg = new Message(Option.ADD, "");
-						msg.setProduct(p);
-						getOut().writeObject(msg);
-						getOut().reset();
-						serverInput = (Message) getIn().readObject();
-						View.showMsg("!!!", serverInput.getMsg());
-						break;
-					}
-					case 2: {
-						/** REMOVE OPTION*/
-						String productID = getProductID();
-						Message msg = new Message(Option.REMOVE, productID);
-						getOut().writeObject(msg);
-						getOut().reset();
-						serverInput = (Message) getIn().readObject();
-						View.showMsg("!!!", serverInput.getMsg());	
-						break;
-					}
-					case 3: {
-						/** LIST OPTION*/
-						Message msg = new Message(Option.LIST, "");
-						getOut().writeObject(msg);
-						getOut().reset();
-						serverInput = (Message) getIn().readObject();
-						View.showMsg("!!!", serverInput.getMsg());	
-						break;
-					}
-					case 4: {
-						/** LIST OPTION*/
-						break;
-					}
-					default:
-						/** NONE OPTION*/
-						break;
-					}
-					
-					
-					
-					
-					if(option == 0) {
-						break;
+					while(true) {
+						Integer option = getUserOption();
+						
+						switch (option) {
+						case 0: {
+							/** EXIT OPTION*/
+							socket.close();
+							break;
+						}
+						case 1: {
+							/** ADD OPTION*/
+							Product p = createProduct();
+							SuppliesMenuMessage msg = new SuppliesMenuMessage(Option.ADD, "");
+							msg.setProduct(p);
+							getOut().writeObject(msg);
+							getOut().reset();
+							serverInput = (SuppliesMenuMessage) getIn().readObject();
+							View.showMsg("!!!", serverInput.getMsg());
+							break;
+						}
+						case 2: {
+							/** REMOVE OPTION*/
+							String productID = getProductID();
+							SuppliesMenuMessage msg = new SuppliesMenuMessage(Option.REMOVE, productID);
+							getOut().writeObject(msg);
+							getOut().reset();
+							serverInput = (SuppliesMenuMessage) getIn().readObject();
+							View.showMsg("!!!", serverInput.getMsg());	
+							break;
+						}
+						case 3: {
+							/** LIST OPTION*/
+							SuppliesMenuMessage msg = new SuppliesMenuMessage(Option.LIST, "");
+							getOut().writeObject(msg);
+							getOut().reset();
+							serverInput = (SuppliesMenuMessage) getIn().readObject();
+							View.showMsg("!!!", serverInput.getMsg());	
+							break;
+						}
+						case 4: {
+							/** CHAT OPTION*/
+							SuppliesMenuMessage msg = new SuppliesMenuMessage(Option.CHAT, "");
+							getOut().writeObject(msg);
+							getOut().reset();
+							break;
+						}
+						default:
+							/** NONE OPTION*/
+							break;
+						}
+						
+						
+						
+						
+						if(option == 0) {
+							break;
+						}
 					}
 					
 					
@@ -159,6 +173,10 @@ public class Client {
 		
 	}
 	
+	/**
+	 * Method to get Product ID
+	 * @return Product ID
+	 */
 	private String getProductID() {
 		/** GET PRODUCT ID */
 		String id = View.showInputText("PRODUCT ID", "TYPE THE PRODUCT ID YOU WANT TO REMOVE:");
@@ -174,7 +192,10 @@ public class Client {
 		}
 		return id;
 	}
-	
+	/**
+	 * Method to create a product
+	 * @return Product
+	 */
 	private Product createProduct() {
 		
 		/** GET PRODUCT NAME */
@@ -233,12 +254,19 @@ public class Client {
 	}
 	
 	
+	/**
+	 * Method to get user's option
+	 * @return option chosen
+	 */
+	/**
+	 * @return
+	 */
 	private Integer getUserOption() {
 		
-		String menuMsg =  "1 - ADD PRODUCT\n" + "1 - ADD PRODUCT\n" + "2 - REMOVE PRODUCT\n" + "3 - LIST PRODUCT(S)\n" + "4 - CHAT\n" + "0 - EXIT\n" ;
+		String menuMsg = "1 - ADD PRODUCT\n" + "2 - REMOVE PRODUCT\n" + "3 - LIST PRODUCT(S)\n" + "4 - CHAT\n" + "0 - EXIT\n" ;
 		
 		try {
-			Integer option = View.showInputNumber("SELECT AN OPTION", menuMsg);
+			Integer option = View.showInputNumber(currentUserName + ": SELECT AN OPTION", menuMsg);
 			
 			return option;
 			

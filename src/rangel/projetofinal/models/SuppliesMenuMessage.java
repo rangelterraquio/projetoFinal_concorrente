@@ -2,11 +2,19 @@ package rangel.projetofinal.models;
 
 import java.io.Serializable;
 
-public class Message implements Serializable{
-	
-	
-	
 
+/**
+ * @author Rangel Cardoso Dias
+ * @matricula UC18200693
+ * 
+ * Model that represents a supplies menu message
+ */
+@SuppressWarnings("serial")
+public class SuppliesMenuMessage implements Serializable{
+	
+	
+	
+	/* PROPERTIES **/
 	private Product product = null;
 	private String msg = null;
 	private Option option;
@@ -14,7 +22,7 @@ public class Message implements Serializable{
 	
 	
 
-	
+	/* GETTERS AND SETTERS **/
 	public Product getProduct() {
 		return product;
 	}
@@ -44,8 +52,9 @@ public class Message implements Serializable{
 		this.option = option;
 	}
 
-	
-	public Message(Option op, String msg) {
+	/** INIT */
+
+	public SuppliesMenuMessage(Option op, String msg) {
 		setOption(op);
 		setMsg(msg);
 	}

@@ -1,5 +1,10 @@
 # projetoFinal_concorrente
 
+## Como executar o projeto
+
+- 1 . Executar ServerSupplies
+- 2 . Executar ChatServer
+- 3 . Executar SuppliesClient
 
 ## Funcionalidades
 
@@ -23,5 +28,5 @@ Usuários terão as seguintes opções:
  
 - Nome;
 - Quantidade em estoque;
-- Código único;s
+- Código único;
 

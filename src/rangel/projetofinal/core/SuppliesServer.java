@@ -5,10 +5,22 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import rangel.projetofinal.jobs.ExitServerJob;
 import rangel.projetofinal.jobs.MenuUserHandler;
 import rangel.projetofinal.models.User;
-
-public class ServerSupplies {
+/**
+ * @author Rangel Cardoso Dias
+ * @matricula UC18200693
+ * 
+ * @implNote Class responsable for Menu server;
+ * 
+ *  Como executar o projeto
+	- 1 . Executar ServerSupplies
+	- 2 . Executar ChatServer
+	- 3 . Executar SuppliesClient
+ *
+ */
+public class SuppliesServer {
 
 	/** Properties */
 	public static int PORT = 9806;
@@ -28,7 +40,8 @@ public class ServerSupplies {
 		ServerSocket ss = new ServerSocket(PORT);
 		
 		
-		//Fazer um Server handler 
+		ExitServerJob exitJob = new ExitServerJob(ss);
+		exitJob.start();
 		
 		
 		while(true) {
